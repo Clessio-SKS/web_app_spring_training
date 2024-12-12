@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  # Service pour l'application Spring Boot
+  todolist:
+    build: .
+    ports:
+      - "8081:8080"  # Mappe le port de l'application
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/postgres
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=example
+    depends_on:
+      - postgres  # L'application dépend de PostgreSQL
+  
+  # Service pour PostgreSQL
+  postgres:
+    image: postgres:14.0-alpine
+    container_name: postgres
+    ports:
+      - "5432:5432"  # Mappe le port PostgreSQL pour y accéder
+    environment:
+      POSTGRES_PASSWORD: example  # Le mot de passe pour l'utilisateur postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Pour persister les données
+
+# Définition des volumes pour persistance des données PostgreSQL
+volumes:
+  postgres_data:
+    driver: local
+
